@@ -16,12 +16,15 @@
             overflow: hidden;
             font-family: 'Courier New', monospace;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         #gameContainer {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 960px;
+            height: 720px;
         }
         
         canvas {
@@ -29,6 +32,7 @@
             width: 100%;
             height: 100%;
             image-rendering: pixelated;
+            border: 2px solid #0f0;
         }
         
         #overlay {
@@ -65,7 +69,7 @@
             background: radial-gradient(
                 circle at center,
                 transparent 30%,
-                rgba(0, 0, 0, 0.9) 100%
+                rgba(0, 0, 0, 0.8) 100%
             );
         }
         
@@ -75,8 +79,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.15"/></svg>');
-            opacity: 0.08;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.12"/></svg>');
+            opacity: 0.1;
+            mix-blend-mode: overlay;
         }
         
         #ui {
@@ -84,46 +89,47 @@
             bottom: 20px;
             left: 20px;
             color: #0f0;
-            font-size: 12px;
+            font-size: 14px;
             text-shadow: 0 0 3px #0f0, 0 0 6px #0f0;
             z-index: 20;
-            background: rgba(0, 20, 0, 0.4);
-            padding: 8px 12px;
+            background: rgba(0, 20, 0, 0.5);
+            padding: 10px 15px;
             border: 1px solid #0f0;
-            border-radius: 2px;
-            line-height: 1.4;
+            border-radius: 3px;
+            line-height: 1.5;
         }
         
         #fearMeter {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 150px;
-            background: rgba(20, 0, 0, 0.6);
+            width: 180px;
+            background: rgba(20, 0, 0, 0.7);
             border: 1px solid #f00;
-            border-radius: 2px;
-            padding: 6px 10px;
+            border-radius: 3px;
+            padding: 8px 12px;
             z-index: 20;
         }
         
         .meterLabel {
             color: #f00;
-            font-size: 11px;
+            font-size: 12px;
             text-shadow: 0 0 3px #f00;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
             letter-spacing: 1px;
         }
         
         .meterBar {
-            height: 6px;
-            background: rgba(60, 0, 0, 0.8);
-            border-radius: 1px;
+            height: 8px;
+            background: rgba(40, 0, 0, 0.8);
+            border-radius: 2px;
             overflow: hidden;
+            margin-bottom: 5px;
         }
         
         .meterFill {
             height: 100%;
-            background: #f00;
+            background: linear-gradient(90deg, #600, #f00);
             width: 0%;
             transition: width 0.3s;
             box-shadow: 0 0 6px #f00;
@@ -149,7 +155,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 30px;
+            padding: 40px;
             background: #000;
         }
         
@@ -157,38 +163,34 @@
             color: #0f0;
         }
         
-        #gameOverScreen {
-            background: rgba(0, 0, 0, 0.95);
-            color: #f00;
+        #gameOverScreen, #winScreen {
             display: none;
+            background: rgba(0, 0, 0, 0.95);
         }
         
-        #winScreen {
-            background: rgba(0, 0, 0, 0.95);
-            color: #0f0;
-            display: none;
-        }
+        #gameOverScreen { color: #f00; }
+        #winScreen { color: #0f0; }
         
         .title {
-            font-size: 42px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px currentColor;
-            letter-spacing: 3px;
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px currentColor;
+            letter-spacing: 4px;
             animation: flicker 4s infinite;
         }
         
         .subtitle {
-            font-size: 16px;
-            margin-bottom: 30px;
+            font-size: 18px;
+            margin-bottom: 40px;
             color: #aaa;
-            max-width: 600px;
+            max-width: 700px;
             line-height: 1.6;
         }
         
         .message {
-            font-size: 24px;
-            margin-bottom: 20px;
-            max-width: 500px;
+            font-size: 28px;
+            margin-bottom: 30px;
+            max-width: 600px;
             line-height: 1.4;
         }
         
@@ -196,20 +198,21 @@
             background: transparent;
             border: 2px solid currentColor;
             color: inherit;
-            padding: 12px 30px;
+            padding: 15px 40px;
             font-family: 'Courier New', monospace;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 30px;
             text-shadow: 0 0 5px currentColor;
-            box-shadow: 0 0 10px currentColor;
+            box-shadow: 0 0 15px currentColor;
             transition: all 0.3s;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
         
         .btn:hover {
             background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 20px currentColor;
+            box-shadow: 0 0 25px currentColor;
+            transform: scale(1.05);
         }
         
         .controls {
@@ -217,14 +220,14 @@
             bottom: 20px;
             right: 20px;
             color: #0a0;
-            font-size: 11px;
+            font-size: 12px;
             text-align: right;
             z-index: 20;
-            background: rgba(0, 20, 0, 0.4);
-            padding: 8px 12px;
+            background: rgba(0, 20, 0, 0.5);
+            padding: 10px 15px;
             border: 1px solid #0a0;
-            border-radius: 2px;
-            line-height: 1.4;
+            border-radius: 3px;
+            line-height: 1.5;
         }
         
         @keyframes flicker {
@@ -241,17 +244,30 @@
         
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.7; }
         }
         
         .hidden {
             display: none !important;
         }
         
-        .distortion {
+        #instructions {
             position: absolute;
-            pointer-events: none;
-            z-index: 5;
+            top: 20px;
+            left: 20px;
+            color: #0a0;
+            font-size: 12px;
+            z-index: 20;
+            background: rgba(0, 20, 0, 0.5);
+            padding: 10px;
+            border: 1px solid #0a0;
+            border-radius: 3px;
+            display: none;
+        }
+        
+        #instructions.show {
+            display: block;
+            animation: pulse 2s infinite;
         }
     </style>
 </head>
@@ -266,8 +282,8 @@
         </div>
         
         <div id="ui">
-            <div>OBJECTIVE: FIND THE EXIT</div>
-            <div>ENTITIES: <span id="entityCount">3</span> ACTIVE</div>
+            <div>OBJECTIVE: FIND THE GREEN EXIT</div>
+            <div>ENTITIES ACTIVE: <span id="entityCount">3</span></div>
             <div>STATUS: <span id="status">EXPLORING</span></div>
         </div>
         
@@ -277,6 +293,12 @@
                 <div class="meterFill" id="fearFill"></div>
             </div>
             <div class="meterLabel" id="fearText">0%</div>
+        </div>
+        
+        <div id="instructions" class="show">
+            USE WASD TO MOVE<br>
+            SHIFT TO RUN<br>
+            R TO RESTART
         </div>
         
         <div class="controls">
@@ -289,206 +311,147 @@
             <div class="screen" id="startScreen">
                 <div class="title">ECHOES OF SOLITUDE</div>
                 <div class="subtitle">
-                    The asylum shifts around you. Find the exit before the entities find you.<br>
-                    Running increases your fear. Fear attracts them. They distort reality.<br>
-                    Trust nothing you see or hear.
+                    You wake in the endless corridors. The walls whisper.<br>
+                    Find the glowing exit before the entities find you.<br>
+                    Running increases fear. Fear attracts them.<br>
+                    They distort reality when near. Trust nothing.
                 </div>
                 <button class="btn" id="startBtn">BEGIN</button>
-                <div class="subtitle" style="font-size: 12px; margin-top: 30px; color: #666;">
-                    Use headphones. Click to activate audio.
+                <div class="subtitle" style="font-size: 14px; margin-top: 40px; color: #666;">
+                    🔊 Use headphones for full effect<br>
+                    Click anywhere to activate audio
                 </div>
             </div>
             
             <div class="screen" id="gameOverScreen">
                 <div class="title">ENTITY CONSUMED YOU</div>
-                <div class="message">The distortion became reality. There is no escape.</div>
+                <div class="message">The distortion became your reality.</div>
                 <button class="btn" id="restartBtn">TRY AGAIN</button>
             </div>
             
             <div class="screen" id="winScreen">
                 <div class="title">ESCAPE ACHIEVED</div>
-                <div class="message">You found the exit. But the asylum remembers...</div>
-                <button class="btn" id="playAgainBtn">CONTINUE RUNNING</button>
+                <div class="message">You found the exit. For now.</div>
+                <button class="btn" id="playAgainBtn">CONTINUE</button>
             </div>
         </div>
     </div>
 
     <script>
         // ========================
-        // GAME CONFIGURATION
-        // ========================
-        const CONFIG = {
-            // Visual
-            RESOLUTION: { width: 320, height: 240 },
-            SCALE: 3,
-            FOG_COLOR: '#0a0a1a',
-            WALL_COLOR: '#1a1a2a',
-            FLOOR_COLOR: '#121220',
-            
-            // Gameplay
-            PLAYER_SPEED: 1.2,
-            PLAYER_RUN_SPEED: 2.0,
-            ENTITY_SPEED: 0.3,
-            FEAR_INCREASE_RUN: 0.5,
-            FEAR_INCREASE_ENTITY: 0.8,
-            FEAR_DECAY: 0.1,
-            ENTITY_SPAWN_FEAR: 60,
-            MAX_ENTITIES: 5,
-            
-            // Audio
-            VOLUME: 0.15,
-            FOOTSTEP_INTERVAL: 400,
-            HEARTBEAT_THRESHOLD: 40
-        };
-
-        // ========================
         // GAME STATE
         // ========================
-        const GameState = {
+        const Game = {
+            // Canvas
             canvas: null,
             ctx: null,
-            screenWidth: 0,
-            screenHeight: 0,
+            width: 320,
+            height: 240,
+            scale: 3,
             
+            // Player
             player: {
                 x: 50,
                 y: 50,
-                angle: 0,
-                moving: false,
-                running: false
+                size: 6,
+                speed: 1.2,
+                running: false,
+                moving: false
             },
             
+            // Exit
             exit: {
                 x: 250,
                 y: 180,
+                size: 10,
                 found: false
             },
             
+            // Entities
             entities: [],
             walls: [],
             lights: [],
             
+            // Game state
             fear: 0,
             gameOver: false,
             won: false,
+            gameStarted: false,
             
+            // Input
             keys: {},
-            mouse: { x: 0, y: 0 },
             
+            // Audio
             audio: null,
             lastFootstep: 0,
             lastHeartbeat: 0,
             
+            // Visual effects
             flicker: 0,
             shake: { x: 0, y: 0 },
-            time: 0
+            time: 0,
+            
+            // Configuration
+            config: {
+                playerRunSpeed: 2.2,
+                entitySpeed: 0.3,
+                fearIncreaseRun: 0.4,
+                fearIncreaseEntity: 0.6,
+                fearDecay: 0.15,
+                entitySpawnFear: 65,
+                maxEntities: 5,
+                heartbeatThreshold: 45
+            }
         };
 
         // ========================
-        // AUDIO ENGINE
+        // SIMPLE AUDIO SYSTEM
         // ========================
-        class AudioEngine {
+        class AudioSystem {
             constructor() {
                 try {
                     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    this.initNodes();
-                    console.log("Audio engine ready");
+                    this.master = this.ctx.createGain();
+                    this.master.connect(this.ctx.destination);
+                    this.master.gain.value = 0.2;
+                    
+                    // Start ambient
+                    this.startAmbient();
+                    console.log("Audio ready");
                 } catch (e) {
                     console.log("Audio not available");
+                    this.ctx = null;
                 }
             }
             
-            initNodes() {
-                // Master chain
-                this.masterGain = this.ctx.createGain();
-                this.masterGain.gain.value = CONFIG.VOLUME;
-                this.masterGain.connect(this.ctx.destination);
+            startAmbient() {
+                if (!this.ctx) return;
                 
-                // Reverb
-                this.convolver = this.ctx.createConvolver();
-                this.convolver.connect(this.masterGain);
+                // Main drone
+                const osc1 = this.ctx.createOscillator();
+                osc1.type = 'sawtooth';
+                osc1.frequency.value = 60;
                 
-                // Lowpass for muffled effect
-                this.lowpass = this.ctx.createBiquadFilter();
-                this.lowpass.type = 'lowpass';
-                this.lowpass.frequency.value = 2000;
-                this.lowpass.connect(this.convolver);
+                const gain1 = this.ctx.createGain();
+                gain1.gain.value = 0.06;
                 
-                // Start ambient sounds
-                this.startAmbience();
-            }
-            
-            startAmbience() {
-                // Drone layer 1
-                this.drone1 = this.ctx.createOscillator();
-                this.drone1.type = 'sawtooth';
-                this.drone1.frequency.value = 65;
+                osc1.connect(gain1);
+                gain1.connect(this.master);
+                osc1.start();
                 
-                // Drone layer 2
-                this.drone2 = this.ctx.createOscillator();
-                this.drone2.type = 'sawtooth';
-                this.drone2.frequency.value = 67;
+                // Second detuned oscillator
+                const osc2 = this.ctx.createOscillator();
+                osc2.type = 'sawtooth';
+                osc2.frequency.value = 62;
                 
-                // LFO for modulation
-                this.lfo = this.ctx.createOscillator();
-                this.lfo.type = 'sine';
-                this.lfo.frequency.value = 0.07;
+                const gain2 = this.ctx.createGain();
+                gain2.gain.value = 0.04;
                 
-                this.lfoGain = this.ctx.createGain();
-                this.lfoGain.gain.value = 4;
+                osc2.connect(gain2);
+                gain2.connect(this.master);
+                osc2.start();
                 
-                // Drone gains
-                this.droneGain1 = this.ctx.createGain();
-                this.droneGain1.gain.value = 0.05;
-                
-                this.droneGain2 = this.ctx.createGain();
-                this.droneGain2.gain.value = 0.04;
-                
-                // Connect drones
-                this.lfo.connect(this.lfoGain);
-                this.lfoGain.connect(this.drone1.frequency);
-                this.lfoGain.connect(this.drone2.frequency);
-                
-                this.drone1.connect(this.droneGain1);
-                this.drone2.connect(this.droneGain2);
-                this.droneGain1.connect(this.lowpass);
-                this.droneGain2.connect(this.lowpass);
-                
-                // Start oscillators
-                this.drone1.start();
-                this.drone2.start();
-                this.lfo.start();
-                
-                // Static layer
-                this.createStatic();
-            }
-            
-            createStatic() {
-                const bufferSize = this.ctx.sampleRate * 2;
-                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-                const data = buffer.getChannelData(0);
-                
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1;
-                }
-                
-                this.staticSource = this.ctx.createBufferSource();
-                this.staticSource.buffer = buffer;
-                this.staticSource.loop = true;
-                
-                this.staticFilter = this.ctx.createBiquadFilter();
-                this.staticFilter.type = 'bandpass';
-                this.staticFilter.frequency.value = 400;
-                this.staticFilter.Q.value = 0.5;
-                
-                this.staticGain = this.ctx.createGain();
-                this.staticGain.gain.value = 0.01;
-                
-                this.staticSource.connect(this.staticFilter);
-                this.staticFilter.connect(this.staticGain);
-                this.staticGain.connect(this.lowpass);
-                
-                this.staticSource.start();
+                this.ambient = { osc1, osc2, gain1, gain2 };
             }
             
             playFootstep(running = false) {
@@ -496,9 +459,9 @@
                 
                 const now = this.ctx.currentTime;
                 
-                // Short noise burst
+                // Create noise burst
                 const noise = this.ctx.createBufferSource();
-                const bufferSize = this.ctx.sampleRate * 0.08;
+                const bufferSize = this.ctx.sampleRate * 0.1;
                 const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
                 const data = buffer.getChannelData(0);
                 
@@ -508,94 +471,79 @@
                 
                 noise.buffer = buffer;
                 
-                // Filter based on running
+                // Filter
                 const filter = this.ctx.createBiquadFilter();
                 filter.type = 'highpass';
-                filter.frequency.value = running ? 250 : 150;
+                filter.frequency.value = running ? 200 : 120;
                 
                 // Envelope
                 const gain = this.ctx.createGain();
                 gain.gain.setValueAtTime(0, now);
-                gain.gain.linearRampToValueAtTime(running ? 0.12 : 0.08, now + 0.02);
+                gain.gain.linearRampToValueAtTime(running ? 0.15 : 0.1, now + 0.02);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
                 
                 noise.connect(filter);
                 filter.connect(gain);
-                gain.connect(this.lowpass);
+                gain.connect(this.master);
                 
                 noise.start(now);
                 noise.stop(now + 0.2);
             }
             
             playHeartbeat() {
-                if (!this.ctx || this.heartbeatPlaying) return;
+                if (!this.ctx || this.heartbeatActive) return;
                 
-                this.heartbeatPlaying = true;
+                this.heartbeatActive = true;
                 
                 const playPulse = () => {
                     if (!this.ctx) return;
                     
                     const now = this.ctx.currentTime;
                     
-                    // Low thump
                     const osc = this.ctx.createOscillator();
-                    osc.frequency.value = 60;
+                    osc.frequency.value = 70;
                     
                     const gain = this.ctx.createGain();
                     gain.gain.setValueAtTime(0, now);
-                    gain.gain.linearRampToValueAtTime(0.15, now + 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    gain.gain.linearRampToValueAtTime(0.2, now + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
                     
                     osc.connect(gain);
-                    gain.connect(this.lowpass);
+                    gain.connect(this.master);
                     
                     osc.start(now);
-                    osc.stop(now + 0.3);
+                    osc.stop(now + 0.25);
                 };
                 
                 // Double beat
                 playPulse();
                 setTimeout(() => {
                     if (this.ctx) playPulse();
-                }, 150);
+                }, 120);
                 
                 setTimeout(() => {
-                    this.heartbeatPlaying = false;
+                    this.heartbeatActive = false;
                 }, 800);
             }
             
             playEntitySound(distance) {
-                if (!this.ctx || Math.random() > 0.4) return;
+                if (!this.ctx || Math.random() > 0.3) return;
                 
                 const now = this.ctx.currentTime;
                 
-                // Whisper-like FM sound
-                const carrier = this.ctx.createOscillator();
-                carrier.type = 'sine';
-                carrier.frequency.value = 150 + Math.random() * 300;
-                
-                const modulator = this.ctx.createOscillator();
-                modulator.type = 'sine';
-                modulator.frequency.value = 5 + Math.random() * 15;
-                
-                const modGain = this.ctx.createGain();
-                modGain.gain.value = 30 + Math.random() * 50;
+                const osc = this.ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = 100 + Math.random() * 400;
                 
                 const gain = this.ctx.createGain();
-                const volume = Math.max(0.03, 0.1 - (distance / 300));
+                const volume = Math.max(0.03, 0.15 - (distance / 200));
                 gain.gain.value = volume;
                 
-                modulator.connect(modGain);
-                modGain.connect(carrier.frequency);
-                carrier.connect(gain);
-                gain.connect(this.lowpass);
+                osc.connect(gain);
+                gain.connect(this.master);
                 
-                carrier.start(now);
-                modulator.start(now);
-                
-                const duration = 0.5 + Math.random();
-                carrier.stop(now + duration);
-                modulator.stop(now + duration);
+                osc.start(now);
+                osc.stop(now + 0.5 + Math.random());
             }
             
             playJumpscare() {
@@ -603,9 +551,9 @@
                 
                 const now = this.ctx.currentTime;
                 
-                // Distorted burst
+                // Loud noise burst
                 const noise = this.ctx.createBufferSource();
-                const bufferSize = this.ctx.sampleRate * 0.3;
+                const bufferSize = this.ctx.sampleRate * 0.4;
                 const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
                 const data = buffer.getChannelData(0);
                 
@@ -615,49 +563,40 @@
                 
                 noise.buffer = buffer;
                 
-                // Wave shaper distortion
+                // Distortion
                 const distortion = this.ctx.createWaveShaper();
                 const curve = new Float32Array(44100);
                 for (let i = 0; i < 44100; i++) {
                     const x = (i - 22050) / 22050;
-                    curve[i] = Math.tanh(x * 10) * 0.5;
+                    curve[i] = Math.atan(x * 15) * 0.5;
                 }
                 distortion.curve = curve;
                 
-                // Volume spike
+                // Volume envelope
                 const gain = this.ctx.createGain();
                 gain.gain.setValueAtTime(0, now);
-                gain.gain.linearRampToValueAtTime(0.7, now + 0.05);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                gain.gain.linearRampToValueAtTime(0.8, now + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
                 
                 noise.connect(distortion);
                 distortion.connect(gain);
-                gain.connect(this.masterGain);
+                gain.connect(this.master);
                 
                 noise.start(now);
-                noise.stop(now + 0.8);
+                noise.stop(now + 0.7);
             }
             
             updateFear(fear) {
-                if (!this.ctx) return;
+                if (!this.ctx || !this.ambient) return;
                 
                 const intensity = fear / 100;
                 
-                // Increase drone volume with fear
-                if (this.droneGain1) {
-                    this.droneGain1.gain.value = 0.05 + (intensity * 0.08);
-                    this.droneGain2.gain.value = 0.04 + (intensity * 0.06);
-                }
+                // Increase ambient volume with fear
+                this.ambient.gain1.gain.value = 0.06 + (intensity * 0.1);
+                this.ambient.gain2.gain.value = 0.04 + (intensity * 0.08);
                 
-                // Add static with fear
-                if (this.staticGain) {
-                    this.staticGain.gain.value = 0.01 + (intensity * 0.04);
-                }
-                
-                // Lower filter cutoff with fear (more muffled)
-                if (this.lowpass) {
-                    this.lowpass.frequency.value = 2000 - (intensity * 800);
-                }
+                // Increase master volume slightly with fear
+                this.master.gain.value = 0.2 + (intensity * 0.1);
             }
             
             resume() {
@@ -668,127 +607,130 @@
         }
 
         // ========================
-        // GAME INITIALIZATION
+        // GAME INITIALIZATION - FIXED
         // ========================
-        function init() {
-            // Setup canvas
-            GameState.canvas = document.getElementById('gameCanvas');
-            GameState.ctx = GameState.canvas.getContext('2d');
+        function initGame() {
+            console.log("Initializing game...");
             
-            // Set resolution
-            GameState.canvas.width = CONFIG.RESOLUTION.width;
-            GameState.canvas.height = CONFIG.RESOLUTION.height;
-            GameState.canvas.style.width = `${CONFIG.RESOLUTION.width * CONFIG.SCALE}px`;
-            GameState.canvas.style.height = `${CONFIG.RESOLUTION.height * CONFIG.SCALE}px`;
+            // Setup canvas
+            Game.canvas = document.getElementById('gameCanvas');
+            Game.ctx = Game.canvas.getContext('2d');
+            
+            // Set canvas size
+            Game.canvas.width = Game.width;
+            Game.canvas.height = Game.height;
+            Game.canvas.style.width = `${Game.width * Game.scale}px`;
+            Game.canvas.style.height = `${Game.height * Game.scale}px`;
             
             // Setup audio
-            GameState.audio = new AudioEngine();
+            Game.audio = new AudioSystem();
             
-            // Generate level
-            generateLevel();
-            
-            // Setup input
-            setupInput();
+            // Reset game state
+            resetGame();
             
             // Start game loop
-            gameLoop();
+            requestAnimationFrame(gameLoop);
+            
+            console.log("Game initialized");
         }
 
-        function generateLevel() {
-            // Reset state
-            GameState.player = {
-                x: 50,
-                y: 50,
-                angle: 0,
-                moving: false,
-                running: false
-            };
+        function resetGame() {
+            // Reset player
+            Game.player.x = 50;
+            Game.player.y = 50;
+            Game.player.running = false;
+            Game.player.moving = false;
             
-            GameState.exit = {
-                x: CONFIG.RESOLUTION.width - 70,
-                y: CONFIG.RESOLUTION.height - 70,
-                found: false
-            };
+            // Reset exit
+            Game.exit.x = Game.width - 70;
+            Game.exit.y = Game.height - 70;
+            Game.exit.found = false;
             
-            GameState.entities = [];
-            GameState.walls = [];
-            GameState.lights = [];
-            GameState.fear = 0;
-            GameState.gameOver = false;
-            GameState.won = false;
-            GameState.time = 0;
+            // Clear arrays
+            Game.entities = [];
+            Game.walls = [];
+            Game.lights = [];
+            
+            // Reset game state
+            Game.fear = 0;
+            Game.gameOver = false;
+            Game.won = false;
+            Game.time = 0;
             
             // Create border walls
-            const wallSize = 10;
-            GameState.walls.push(
-                { x: -wallSize, y: -wallSize, w: CONFIG.RESOLUTION.width + wallSize * 2, h: wallSize },
-                { x: -wallSize, y: CONFIG.RESOLUTION.height, w: CONFIG.RESOLUTION.width + wallSize * 2, h: wallSize },
-                { x: -wallSize, y: 0, w: wallSize, h: CONFIG.RESOLUTION.height },
-                { x: CONFIG.RESOLUTION.width, y: 0, w: wallSize, h: CONFIG.RESOLUTION.height }
-            );
+            Game.walls = [
+                { x: -10, y: -10, w: Game.width + 20, h: 10 },
+                { x: -10, y: Game.height, w: Game.width + 20, h: 10 },
+                { x: -10, y: 0, w: 10, h: Game.height },
+                { x: Game.width, y: 0, w: 10, h: Game.height }
+            ];
             
-            // Create random walls
-            for (let i = 0; i < 8; i++) {
-                const x = 30 + Math.random() * (CONFIG.RESOLUTION.width - 100);
-                const y = 30 + Math.random() * (CONFIG.RESOLUTION.height - 100);
-                const w = 20 + Math.random() * 40;
-                const h = 20 + Math.random() * 40;
+            // Add random walls
+            for (let i = 0; i < 10; i++) {
+                const x = 30 + Math.random() * (Game.width - 60);
+                const y = 30 + Math.random() * (Game.height - 60);
+                const w = 15 + Math.random() * 40;
+                const h = 15 + Math.random() * 40;
                 
-                // Don't block player or exit
-                if (Math.abs(x - GameState.player.x) > 40 && Math.abs(y - GameState.player.y) > 40 &&
-                    Math.abs(x - GameState.exit.x) > 40 && Math.abs(y - GameState.exit.y) > 40) {
-                    GameState.walls.push({ x, y, w, h });
+                // Don't block start or exit
+                if (distance(x, y, Game.player.x, Game.player.y) > 40 && 
+                    distance(x, y, Game.exit.x, Game.exit.y) > 40) {
+                    Game.walls.push({ x, y, w, h });
                 }
             }
             
-            // Create lights
-            for (let i = 0; i < 6; i++) {
-                GameState.lights.push({
-                    x: 20 + Math.random() * (CONFIG.RESOLUTION.width - 40),
-                    y: 20 + Math.random() * (CONFIG.RESOLUTION.height - 40),
-                    radius: 15 + Math.random() * 25,
-                    intensity: 0.4 + Math.random() * 0.4
+            // Add lights
+            for (let i = 0; i < 8; i++) {
+                Game.lights.push({
+                    x: 20 + Math.random() * (Game.width - 40),
+                    y: 20 + Math.random() * (Game.height - 40),
+                    radius: 10 + Math.random() * 20,
+                    intensity: 0.3 + Math.random() * 0.4
                 });
             }
             
-            // Create initial entities
-            spawnEntity();
-            spawnEntity();
-            spawnEntity();
+            // Add entities
+            for (let i = 0; i < 3; i++) {
+                spawnEntity();
+            }
             
             // Update UI
             updateUI();
+            
+            // Hide instructions after 5 seconds
+            setTimeout(() => {
+                document.getElementById('instructions').classList.remove('show');
+            }, 5000);
         }
 
         function spawnEntity() {
-            if (GameState.entities.length >= CONFIG.MAX_ENTITIES) return;
+            if (Game.entities.length >= Game.config.maxEntities) return;
             
             let x, y;
             do {
-                x = 40 + Math.random() * (CONFIG.RESOLUTION.width - 80);
-                y = 40 + Math.random() * (CONFIG.RESOLUTION.height - 80);
-            } while (distance(x, y, GameState.player.x, GameState.player.y) < 60 ||
-                     distance(x, y, GameState.exit.x, GameState.exit.y) < 60);
+                x = 40 + Math.random() * (Game.width - 80);
+                y = 40 + Math.random() * (Game.height - 80);
+            } while (distance(x, y, Game.player.x, Game.player.y) < 60 ||
+                     distance(x, y, Game.exit.x, Game.exit.y) < 60);
             
-            GameState.entities.push({
-                x,
-                y,
-                speed: CONFIG.ENTITY_SPEED * (0.7 + Math.random() * 0.6),
+            Game.entities.push({
+                x, y,
+                speed: Game.config.entitySpeed * (0.8 + Math.random() * 0.4),
                 active: true,
-                lastSound: 0,
-                pulse: Math.random() * Math.PI * 2
+                pulse: Math.random() * Math.PI * 2,
+                lastSound: 0
             });
         }
 
         // ========================
-        // GAME LOGIC
+        // GAME UPDATE
         // ========================
         function update(deltaTime) {
-            if (GameState.gameOver || GameState.won) return;
+            if (Game.gameOver || Game.won) return;
             
-            GameState.time += deltaTime;
+            Game.time += deltaTime;
             
-            // Update player
+            // Update player movement
             updatePlayer();
             
             // Update fear
@@ -801,11 +743,11 @@
             checkCollisions();
             
             // Check win condition
-            if (distance(GameState.player.x, GameState.player.y, GameState.exit.x, GameState.exit.y) < 20) {
+            if (distance(Game.player.x, Game.player.y, Game.exit.x, Game.exit.y) < 20) {
                 winGame();
             }
             
-            // Update visual effects
+            // Update effects
             updateEffects();
             
             // Update UI
@@ -813,128 +755,125 @@
         }
 
         function updatePlayer() {
-            const speed = GameState.player.running ? CONFIG.PLAYER_RUN_SPEED : CONFIG.PLAYER_SPEED;
-            const oldX = GameState.player.x;
-            const oldY = GameState.player.y;
+            const speed = Game.player.running ? Game.config.playerRunSpeed : Game.player.speed;
+            const oldX = Game.player.x;
+            const oldY = Game.player.y;
             
             // Movement
-            if (GameState.keys['w'] || GameState.keys['arrowup']) {
-                GameState.player.y -= speed;
-                GameState.player.moving = true;
+            if (Game.keys['w'] || Game.keys['arrowup']) {
+                Game.player.y -= speed;
+                Game.player.moving = true;
             }
-            if (GameState.keys['s'] || GameState.keys['arrowdown']) {
-                GameState.player.y += speed;
-                GameState.player.moving = true;
+            if (Game.keys['s'] || Game.keys['arrowdown']) {
+                Game.player.y += speed;
+                Game.player.moving = true;
             }
-            if (GameState.keys['a'] || GameState.keys['arrowleft']) {
-                GameState.player.x -= speed;
-                GameState.player.moving = true;
+            if (Game.keys['a'] || Game.keys['arrowleft']) {
+                Game.player.x -= speed;
+                Game.player.moving = true;
             }
-            if (GameState.keys['d'] || GameState.keys['arrowright']) {
-                GameState.player.x += speed;
-                GameState.player.moving = true;
+            if (Game.keys['d'] || Game.keys['arrowright']) {
+                Game.player.x += speed;
+                Game.player.moving = true;
             }
             
             // Keep in bounds
-            GameState.player.x = clamp(GameState.player.x, 10, CONFIG.RESOLUTION.width - 10);
-            GameState.player.y = clamp(GameState.player.y, 10, CONFIG.RESOLUTION.height - 10);
+            Game.player.x = clamp(Game.player.x, 10, Game.width - 10);
+            Game.player.y = clamp(Game.player.y, 10, Game.height - 10);
             
             // Wall collision
-            for (const wall of GameState.walls) {
-                if (rectCircleCollision(wall, GameState.player)) {
-                    GameState.player.x = oldX;
-                    GameState.player.y = oldY;
+            for (const wall of Game.walls) {
+                if (rectCircleCollision(wall, Game.player)) {
+                    Game.player.x = oldX;
+                    Game.player.y = oldY;
                     break;
                 }
             }
             
-            // Footsteps
-            if (GameState.player.moving && GameState.audio) {
+            // Play footsteps
+            if (Game.player.moving && Game.audio) {
                 const now = Date.now();
-                if (now - GameState.lastFootstep > (GameState.player.running ? 200 : 400)) {
-                    GameState.audio.playFootstep(GameState.player.running);
-                    GameState.lastFootstep = now;
+                const interval = Game.player.running ? 300 : 500;
+                if (now - Game.lastFootstep > interval) {
+                    Game.audio.playFootstep(Game.player.running);
+                    Game.lastFootstep = now;
                 }
             }
-            
-            GameState.player.moving = false;
         }
 
         function updateFear() {
-            // Base fear increase from running
-            if (GameState.player.running) {
-                GameState.fear += CONFIG.FEAR_INCREASE_RUN;
+            // Increase fear if running
+            if (Game.player.running) {
+                Game.fear += Game.config.fearIncreaseRun;
             }
             
-            // Fear from nearby entities
-            for (const entity of GameState.entities) {
+            // Increase fear from nearby entities
+            for (const entity of Game.entities) {
                 if (!entity.active) continue;
                 
-                const dist = distance(entity.x, entity.y, GameState.player.x, GameState.player.y);
-                if (dist < 100) {
-                    GameState.fear += CONFIG.FEAR_INCREASE_ENTITY * (1 - dist / 100);
+                const dist = distance(entity.x, entity.y, Game.player.x, Game.player.y);
+                if (dist < 120) {
+                    Game.fear += Game.config.fearIncreaseEntity * (1 - dist / 120);
                 }
             }
             
             // Natural decay
-            GameState.fear = Math.max(0, GameState.fear - CONFIG.FEAR_DECAY);
-            
-            // Clamp to 100
-            GameState.fear = Math.min(100, GameState.fear);
+            Game.fear = Math.max(0, Game.fear - Game.config.fearDecay);
+            Game.fear = Math.min(100, Game.fear);
             
             // Update audio
-            if (GameState.audio) {
-                GameState.audio.updateFear(GameState.fear);
+            if (Game.audio) {
+                Game.audio.updateFear(Game.fear);
                 
-                // Heartbeat when scared
-                if (GameState.fear > CONFIG.HEARTBEAT_THRESHOLD) {
+                // Play heartbeat if scared
+                if (Game.fear > Game.config.heartbeatThreshold) {
                     const now = Date.now();
-                    if (now - GameState.lastHeartbeat > 1000 - (GameState.fear * 8)) {
-                        GameState.audio.playHeartbeat();
-                        GameState.lastHeartbeat = now;
+                    const interval = 1000 - (Game.fear * 7);
+                    if (now - Game.lastHeartbeat > interval) {
+                        Game.audio.playHeartbeat();
+                        Game.lastHeartbeat = now;
                     }
                 }
             }
             
-            // Spawn new entity if fear is high enough
-            if (GameState.fear > CONFIG.ENTITY_SPAWN_FEAR && 
-                GameState.entities.length < CONFIG.MAX_ENTITIES &&
-                Math.random() < 0.01) {
+            // Spawn new entity if fear is high
+            if (Game.fear > Game.config.entitySpawnFear && 
+                Game.entities.length < Game.config.maxEntities &&
+                Math.random() < 0.008) {
                 spawnEntity();
             }
         }
 
         function updateEntities() {
-            for (const entity of GameState.entities) {
+            for (const entity of Game.entities) {
                 if (!entity.active) continue;
                 
-                entity.pulse += 0.05;
+                entity.pulse += 0.03;
                 
                 // Move toward player
-                const dx = GameState.player.x - entity.x;
-                const dy = GameState.player.y - entity.y;
+                const dx = Game.player.x - entity.x;
+                const dy = Game.player.y - entity.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 
                 if (dist > 0) {
-                    const speed = entity.speed * (1 + GameState.fear / 100);
+                    const speed = entity.speed * (1 + Game.fear / 150);
                     entity.x += (dx / dist) * speed;
                     entity.y += (dy / dist) * speed;
                 }
                 
-                // Wall collision for entities
-                for (const wall of GameState.walls) {
+                // Wall collision
+                for (const wall of Game.walls) {
                     if (rectCircleCollision(wall, entity)) {
-                        // Simple bounce
-                        entity.x -= (dx / dist) * 2;
-                        entity.y -= (dy / dist) * 2;
+                        entity.x -= (dx / dist) * 3;
+                        entity.y -= (dy / dist) * 3;
                     }
                 }
                 
                 // Play sound if close
-                if (dist < 120 && GameState.audio) {
+                if (dist < 100 && Game.audio) {
                     const now = Date.now();
-                    if (now - entity.lastSound > 2000 + Math.random() * 2000) {
-                        GameState.audio.playEntitySound(dist);
+                    if (now - entity.lastSound > 3000) {
+                        Game.audio.playEntitySound(dist);
                         entity.lastSound = now;
                     }
                 }
@@ -942,43 +881,41 @@
         }
 
         function checkCollisions() {
-            for (const entity of GameState.entities) {
+            for (const entity of Game.entities) {
                 if (!entity.active) continue;
                 
-                const dist = distance(entity.x, entity.y, GameState.player.x, GameState.player.y);
+                const dist = distance(entity.x, entity.y, Game.player.x, Game.player.y);
                 if (dist < 15) {
                     gameOver();
-                    break;
+                    return;
                 }
             }
         }
 
         function updateEffects() {
-            // Flicker based on fear
-            GameState.flicker = GameState.fear > 30 ? 
-                Math.random() * (GameState.fear / 100) * 0.3 : 
-                0;
-            
             // Screen shake based on fear
-            if (GameState.fear > 50) {
-                GameState.shake.x = (Math.random() - 0.5) * (GameState.fear / 100) * 2;
-                GameState.shake.y = (Math.random() - 0.5) * (GameState.fear / 100) * 2;
+            if (Game.fear > 60) {
+                Game.shake.x = (Math.random() - 0.5) * (Game.fear / 100) * 3;
+                Game.shake.y = (Math.random() - 0.5) * (Game.fear / 100) * 3;
             } else {
-                GameState.shake.x = 0;
-                GameState.shake.y = 0;
+                Game.shake.x = 0;
+                Game.shake.y = 0;
             }
+            
+            // Flicker based on fear
+            Game.flicker = Game.fear > 40 ? Math.random() * (Game.fear / 100) * 0.2 : 0;
         }
 
         function updateUI() {
-            document.getElementById('entityCount').textContent = GameState.entities.length;
-            document.getElementById('fearText').textContent = Math.floor(GameState.fear) + '%';
-            document.getElementById('fearFill').style.width = GameState.fear + '%';
+            document.getElementById('entityCount').textContent = Game.entities.length;
+            document.getElementById('fearText').textContent = Math.floor(Game.fear) + '%';
+            document.getElementById('fearFill').style.width = Game.fear + '%';
             
             // Update status
             let status = 'EXPLORING';
-            if (GameState.player.running) status = 'RUNNING';
-            if (GameState.fear > 70) status = 'PANIC';
-            if (GameState.entities.some(e => distance(e.x, e.y, GameState.player.x, GameState.player.y) < 50)) {
+            if (Game.player.running) status = 'RUNNING';
+            if (Game.fear > 70) status = 'PANIC';
+            if (Game.entities.some(e => distance(e.x, e.y, Game.player.x, Game.player.y) < 60)) {
                 status = 'ENTITY NEARBY';
             }
             document.getElementById('status').textContent = status;
@@ -988,41 +925,41 @@
         // RENDERING
         // ========================
         function render() {
-            const ctx = GameState.ctx;
-            const width = CONFIG.RESOLUTION.width;
-            const height = CONFIG.RESOLUTION.height;
+            const ctx = Game.ctx;
+            const width = Game.width;
+            const height = Game.height;
             
-            // Clear with fade effect
-            ctx.fillStyle = CONFIG.FOG_COLOR;
+            // Clear canvas
+            ctx.fillStyle = '#0a0a1a';
             ctx.fillRect(0, 0, width, height);
             
-            // Apply shake
+            // Apply screen shake
             ctx.save();
-            ctx.translate(GameState.shake.x, GameState.shake.y);
+            ctx.translate(Game.shake.x, Game.shake.y);
             
             // Draw floor
-            ctx.fillStyle = CONFIG.FLOOR_COLOR;
+            ctx.fillStyle = '#121220';
             ctx.fillRect(0, 0, width, height);
             
             // Draw walls
-            ctx.fillStyle = CONFIG.WALL_COLOR;
-            for (const wall of GameState.walls) {
+            ctx.fillStyle = '#1a1a2a';
+            for (const wall of Game.walls) {
                 ctx.fillRect(wall.x, wall.y, wall.w, wall.h);
                 
                 // Wall texture
                 ctx.fillStyle = '#2a2a3a';
-                ctx.fillRect(wall.x + 2, wall.y + 2, wall.w - 4, wall.h - 4);
-                ctx.fillStyle = CONFIG.WALL_COLOR;
+                ctx.fillRect(wall.x + 1, wall.y + 1, wall.w - 2, wall.h - 2);
+                ctx.fillStyle = '#1a1a2a';
             }
             
             // Draw lights
-            for (const light of GameState.lights) {
+            for (const light of Game.lights) {
                 const gradient = ctx.createRadialGradient(
                     light.x, light.y, 0,
                     light.x, light.y, light.radius
                 );
-                gradient.addColorStop(0, `rgba(100, 80, 60, ${light.intensity})`);
-                gradient.addColorStop(0.5, `rgba(60, 40, 30, ${light.intensity * 0.5})`);
+                gradient.addColorStop(0, `rgba(120, 100, 80, ${light.intensity})`);
+                gradient.addColorStop(0.6, `rgba(80, 60, 40, ${light.intensity * 0.6})`);
                 gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
                 
                 ctx.fillStyle = gradient;
@@ -1031,83 +968,81 @@
             }
             
             // Draw exit
-            if (!GameState.exit.found) {
-                ctx.fillStyle = '#0f0';
-                const pulse = 0.5 + Math.sin(GameState.time * 0.005) * 0.3;
-                ctx.globalAlpha = pulse;
+            if (!Game.exit.found) {
+                const pulse = 0.5 + Math.sin(Game.time * 0.004) * 0.4;
+                ctx.fillStyle = `rgba(0, 255, 0, ${pulse})`;
                 ctx.beginPath();
-                ctx.arc(GameState.exit.x, GameState.exit.y, 8, 0, Math.PI * 2);
+                ctx.arc(Game.exit.x, Game.exit.y, Game.exit.size, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.globalAlpha = 1;
                 
-                // Glow effect
-                ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+                // Glow
+                ctx.fillStyle = `rgba(0, 255, 0, 0.1)`;
                 ctx.beginPath();
-                ctx.arc(GameState.exit.x, GameState.exit.y, 15, 0, Math.PI * 2);
+                ctx.arc(Game.exit.x, Game.exit.y, 20, 0, Math.PI * 2);
                 ctx.fill();
             }
             
-            // Draw entities (distortion effect)
-            for (const entity of GameState.entities) {
+            // Draw entities
+            for (const entity of Game.entities) {
                 if (!entity.active) continue;
                 
-                const dist = distance(entity.x, entity.y, GameState.player.x, GameState.player.y);
-                if (dist < 150) {
-                    const intensity = 1 - (dist / 150);
+                const dist = distance(entity.x, entity.y, Game.player.x, Game.player.y);
+                if (dist < 140) {
+                    const intensity = 1 - (dist / 140);
                     
-                    // Draw distortion area
+                    // Create distortion effect
                     ctx.save();
                     
-                    // Create clipping circle
+                    // Clip circle
                     ctx.beginPath();
-                    ctx.arc(entity.x, entity.y, 20, 0, Math.PI * 2);
+                    ctx.arc(entity.x, entity.y, 25, 0, Math.PI * 2);
                     ctx.clip();
                     
-                    // Offset the existing image for distortion
-                    const offset = Math.sin(entity.pulse) * 3 * intensity;
-                    ctx.drawImage(GameState.canvas, 
-                        entity.x - 25, entity.y - 25, 50, 50,
-                        entity.x - 25 + offset, entity.y - 25 + offset, 50, 50);
+                    // Draw offset image for distortion
+                    const offset = Math.sin(entity.pulse) * 4 * intensity;
+                    ctx.drawImage(Game.canvas, 
+                        entity.x - 30, entity.y - 30, 60, 60,
+                        entity.x - 30 + offset, entity.y - 30 + offset, 60, 60);
                     
                     ctx.restore();
                     
                     // Entity indicator
                     if (dist < 80) {
-                        ctx.fillStyle = `rgba(255, 0, 0, ${0.2 * intensity})`;
+                        ctx.fillStyle = `rgba(255, 0, 0, ${0.15 * intensity})`;
                         ctx.beginPath();
-                        ctx.arc(entity.x, entity.y, 4 + Math.sin(entity.pulse) * 2, 0, Math.PI * 2);
+                        ctx.arc(entity.x, entity.y, 3 + Math.sin(entity.pulse) * 2, 0, Math.PI * 2);
                         ctx.fill();
                     }
                 }
             }
             
             // Draw player
-            ctx.fillStyle = '#fff';
+            ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.arc(GameState.player.x, GameState.player.y, 6, 0, Math.PI * 2);
+            ctx.arc(Game.player.x, Game.player.y, Game.player.size, 0, Math.PI * 2);
             ctx.fill();
             
-            // Player direction
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 1;
+            // Player direction indicator
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
             ctx.beginPath();
-            ctx.moveTo(GameState.player.x, GameState.player.y);
+            ctx.moveTo(Game.player.x, Game.player.y);
             ctx.lineTo(
-                GameState.player.x + Math.cos(GameState.time * 0.01) * 10,
-                GameState.player.y + Math.sin(GameState.time * 0.01) * 10
+                Game.player.x + Math.cos(Game.time * 0.008) * 12,
+                Game.player.y + Math.sin(Game.time * 0.008) * 12
             );
             ctx.stroke();
             
             // Fear overlay
-            if (GameState.fear > 30) {
-                const alpha = (GameState.fear - 30) / 70 * 0.4;
+            if (Game.fear > 40) {
+                const alpha = (Game.fear - 40) / 60 * 0.35;
                 ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
                 ctx.fillRect(0, 0, width, height);
             }
             
             // Flicker overlay
-            if (GameState.flicker > 0) {
-                ctx.fillStyle = `rgba(0, 0, 0, ${GameState.flicker})`;
+            if (Game.flicker > 0) {
+                ctx.fillStyle = `rgba(0, 0, 0, ${Game.flicker})`;
                 ctx.fillRect(0, 0, width, height);
             }
             
@@ -1118,37 +1053,39 @@
         // GAME FLOW
         // ========================
         function gameOver() {
-            GameState.gameOver = true;
+            Game.gameOver = true;
             
-            if (GameState.audio) {
-                GameState.audio.playJumpscare();
+            if (Game.audio) {
+                Game.audio.playJumpscare();
             }
             
             document.getElementById('gameOverScreen').style.display = 'flex';
         }
 
         function winGame() {
-            GameState.won = true;
-            GameState.exit.found = true;
+            Game.won = true;
+            Game.exit.found = true;
             document.getElementById('winScreen').style.display = 'flex';
         }
 
         function restartGame() {
             document.getElementById('gameOverScreen').style.display = 'none';
             document.getElementById('winScreen').style.display = 'none';
-            generateLevel();
+            resetGame();
         }
 
         // ========================
         // GAME LOOP
         // ========================
         let lastTime = 0;
-        function gameLoop(currentTime = 0) {
+        function gameLoop(currentTime) {
             const deltaTime = Math.min(currentTime - lastTime, 100) / 1000;
             lastTime = currentTime;
             
-            update(deltaTime);
-            render();
+            if (Game.gameStarted) {
+                update(deltaTime);
+                render();
+            }
             
             requestAnimationFrame(gameLoop);
         }
@@ -1156,59 +1093,46 @@
         // ========================
         // INPUT HANDLING
         // ========================
-        function setupInput() {
-            // Keyboard
-            document.addEventListener('keydown', (e) => {
-                const key = e.key.toLowerCase();
-                GameState.keys[key] = true;
-                
-                if (key === 'shift') {
-                    GameState.player.running = true;
-                }
-                
-                if (key === 'r') {
-                    restartGame();
-                }
-                
-                if (key === 'enter' && !GameState.gameStarted) {
-                    startGame();
-                }
-            });
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            Game.keys[key] = true;
             
-            document.addEventListener('keyup', (e) => {
-                const key = e.key.toLowerCase();
-                GameState.keys[key] = false;
-                
-                if (key === 'shift') {
-                    GameState.player.running = false;
-                }
-            });
+            if (key === 'shift') {
+                Game.player.running = true;
+            }
             
-            // Mouse
-            document.addEventListener('mousemove', (e) => {
-                const rect = GameState.canvas.getBoundingClientRect();
-                GameState.mouse.x = e.clientX - rect.left;
-                GameState.mouse.y = e.clientY - rect.top;
-            });
-            
-            // Start button
-            document.getElementById('startBtn').addEventListener('click', startGame);
-            document.getElementById('restartBtn').addEventListener('click', restartGame);
-            document.getElementById('playAgainBtn').addEventListener('click', restartGame);
-            
-            // Activate audio on first click
-            document.addEventListener('click', () => {
-                if (GameState.audio) {
-                    GameState.audio.resume();
-                }
-            }, { once: true });
-        }
+            if (key === 'r') {
+                restartGame();
+            }
+        });
 
-        function startGame() {
+        document.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            Game.keys[key] = false;
+            
+            if (key === 'shift') {
+                Game.player.running = false;
+            }
+        });
+
+        // Start button
+        document.getElementById('startBtn').addEventListener('click', () => {
+            console.log("Start button clicked");
             document.getElementById('startScreen').classList.add('hidden');
-            GameState.gameStarted = true;
-            init();
-        }
+            Game.gameStarted = true;
+            initGame();
+        });
+
+        // Restart buttons
+        document.getElementById('restartBtn').addEventListener('click', restartGame);
+        document.getElementById('playAgainBtn').addEventListener('click', restartGame);
+
+        // Activate audio on click
+        document.addEventListener('click', () => {
+            if (Game.audio) {
+                Game.audio.resume();
+            }
+        }, { once: true });
 
         // ========================
         // UTILITY FUNCTIONS
@@ -1225,15 +1149,18 @@
             const dx = Math.abs(circle.x - (rect.x + rect.w / 2));
             const dy = Math.abs(circle.y - (rect.y + rect.h / 2));
             
-            if (dx > (rect.w / 2 + 6)) return false;
-            if (dy > (rect.h / 2 + 6)) return false;
+            if (dx > (rect.w / 2 + circle.size)) return false;
+            if (dy > (rect.h / 2 + circle.size)) return false;
             
             if (dx <= (rect.w / 2)) return true;
             if (dy <= (rect.h / 2)) return true;
             
             const cornerDist = (dx - rect.w / 2) ** 2 + (dy - rect.h / 2) ** 2;
-            return cornerDist <= (6 ** 2);
+            return cornerDist <= (circle.size ** 2);
         }
+
+        // Initialize on page load
+        console.log("Page loaded, ready to start");
     </script>
 </body>
 </html>
