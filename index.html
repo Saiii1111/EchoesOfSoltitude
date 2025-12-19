@@ -1,13 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Echoes Of Solitude</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOID HORROR</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="game"></canvas>
-  <div id="overlay">Click to Begin</div>
-  <script src="script.js"></script>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="crt"></div>
+        <div id="vignette"></div>
+        <div id="scanlines"></div>
+        
+        <div id="score">SCORE: 0</div>
+        <div id="level">LEVEL: 1</div>
+        
+        <div id="hud">
+            <div>FEAR: <span id="fearPercent">0</span>%</div>
+            <div id="fearBar">
+                <div id="fearFill"></div>
+            </div>
+            <div>MONSTERS: <span id="monsterCount">0</span></div>
+            <div>KEYS: <span id="keys">0</span>/3</div>
+        </div>
+        
+        <div id="instructions">
+            ARROWS/WASD: MOVE<br>
+            SHIFT: SPRINT<br>
+            E: PICK UP KEY<br>
+            FIND 3 KEYS TO ESCAPE
+        </div>
+        
+        <div id="screens">
+            <div class="screen" id="startScreen">
+                <div class="title">VOID HORROR</div>
+                <div class="subtitle">
+                    The void consumes all. Find 3 keys to unlock the exit.<br>
+                    Monsters hunt you in the dark. Fear grows in their presence.<br>
+                    Survive as long as you can.
+                </div>
+                <button class="btn" id="startBtn">ENTER THE VOID</button>
+                <div class="subtitle" style="font-size: 12px; margin-top: 30px; color: #500;">
+                    🔊 Use headphones for immersive experience
+                </div>
+            </div>
+            
+            <div class="screen" id="gameOver">
+                <div class="title">CONSUMED</div>
+                <div class="subtitle" id="deathMessage">The void has taken you.</div>
+                <div class="subtitle" style="font-size: 24px; margin: 20px 0;">
+                    SCORE: <span id="finalScore">0</span>
+                </div>
+                <button class="btn" id="restartBtn">TRY AGAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
