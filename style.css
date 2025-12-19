@@ -1,192 +1,241 @@
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-canvas.width = 320;
-canvas.height = 200;
-
-// ===== GAME STATE =====
-let started = false;
-let gameOver = false;
-
-// ===== MAP =====
-const TILE = 16;
-const MAP = [
-  "####################",
-  "#......#...........#",
-  "#.####.#.#####.###..#",
-  "#.#....#.....#.#...#",
-  "#.#.#########.#.#.##",
-  "#.#...........#.#..#",
-  "#.###########.#.##.#",
-  "#.............#....#",
-  "###########E########"
-];
-
-function isWall(px, py) {
-  const x = Math.floor(px / TILE);
-  const y = Math.floor(py / TILE);
-  if (!MAP[y] || !MAP[y][x]) return true;
-  return MAP[y][x] === "#";
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-// ===== PLAYER =====
-const player = {
-  x: 32,
-  y: 32,
-  speed: 1,
-  fear: 0
-};
-
-// ===== MONSTER =====
-const monster = {
-  x: 240,
-  y: 144,
-  speed: 0.4,
-  active: false
-};
-
-// ===== INPUT =====
-const keys = {};
-window.addEventListener("keydown", e => keys[e.key] = true);
-window.addEventListener("keyup", e => keys[e.key] = false);
-
-// ===== AUDIO (GENERATED) =====
-let audioCtx, humOsc, humGain;
-
-function startAudio() {
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  humOsc = audioCtx.createOscillator();
-  humOsc.type = "sine";
-  humOsc.frequency.value = 35;
-
-  humGain = audioCtx.createGain();
-  humGain.gain.value = 0.03;
-
-  humOsc.connect(humGain);
-  humGain.connect(audioCtx.destination);
-  humOsc.start();
+body {
+    background: #000;
+    font-family: 'Courier New', monospace;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-// ===== START =====
-document.getElementById("overlay").onclick = () => {
-  if (!started) {
-    startAudio();
-    started = true;
-    document.getElementById("overlay").remove();
-  }
-};
-
-// ===== HELPERS =====
-function dist(a, b) {
-  return Math.hypot(a.x - b.x, a.y - b.y);
+#gameContainer {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    border: 2px solid #300;
 }
 
-// ===== UPDATE =====
-function update() {
-  if (!started || gameOver) return;
-
-  let nx = player.x;
-  let ny = player.y;
-  let moving = false;
-
-  if (keys["w"] || keys["ArrowUp"]) { ny -= player.speed; moving = true; }
-  if (keys["s"] || keys["ArrowDown"]) { ny += player.speed; moving = true; }
-  if (keys["a"] || keys["ArrowLeft"]) { nx -= player.speed; moving = true; }
-  if (keys["d"] || keys["ArrowRight"]) { nx += player.speed; moving = true; }
-
-  if (!isWall(nx, player.y)) player.x = nx;
-  if (!isWall(player.x, ny)) player.y = ny;
-
-  // Fear system
-  const d = dist(player, monster);
-  if (d < 120) {
-    player.fear = Math.min(1, player.fear + 0.002);
-    monster.active = true;
-  } else {
-    player.fear = Math.max(0, player.fear - 0.001);
-  }
-
-  // Audio reacts to fear
-  humGain.gain.value = 0.03 + player.fear * 0.12;
-  humOsc.frequency.value = 35 + player.fear * 50;
-
-  // Monster moves only if player moves
-  if (monster.active && moving) {
-    const ang = Math.atan2(player.y - monster.y, player.x - monster.x);
-    monster.x += Math.cos(ang) * monster.speed;
-    monster.y += Math.sin(ang) * monster.speed;
-  }
-
-  // Death
-  if (d < 8) {
-    gameOver = true;
-    setTimeout(() => {
-      alert("You were never alone.");
-      location.reload();
-    }, 100);
-  }
-
-  // Escape
-  const tile = MAP[Math.floor(player.y / TILE)][Math.floor(player.x / TILE)];
-  if (tile === "E") {
-    gameOver = true;
-    setTimeout(() => {
-      alert("You escaped.\nSomething followed.");
-      location.reload();
-    }, 100);
-  }
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
 }
 
-// ===== DRAW =====
-function draw() {
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Map
-  for (let y = 0; y < MAP.length; y++) {
-    for (let x = 0; x < MAP[y].length; x++) {
-      if (MAP[y][x] === "#") {
-        ctx.fillStyle = "#222";
-        ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
-      }
-      if (MAP[y][x] === "E") {
-        ctx.fillStyle = "white";
-        ctx.fillRect(x * TILE + 4, y * TILE + 4, 8, 8);
-      }
-    }
-  }
-
-  // Darkness
-  ctx.fillStyle = "rgba(0,0,0,0.85)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Light radius
-  ctx.save();
-  ctx.globalCompositeOperation = "destination-out";
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, 50 - player.fear * 25, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Monster (barely visible)
-  if (monster.active) {
-    ctx.fillStyle = "rgba(255,255,255,0.15)";
-    ctx.fillRect(monster.x - 4, monster.y - 4, 8, 8);
-  }
-
-  // Player
-  ctx.fillStyle = "white";
-  ctx.fillRect(player.x - 2, player.y - 2, 4, 4);
-
-  // Title
-  ctx.fillStyle = "rgba(255,255,255,0.5)";
-  ctx.fillText("Echoes Of Solitude", 6, 12);
+#crt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    opacity: 0.7;
 }
 
-// ===== LOOP =====
-function loop() {
-  update();
-  draw();
-  requestAnimationFrame(loop);
+#vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 100px #000;
+    pointer-events: none;
+    z-index: 11;
 }
-loop();
+
+#scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(0, 0, 0, 0.3) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 12;
+    opacity: 0.6;
+}
+
+#hud {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: #f00;
+    font-size: 12px;
+    text-shadow: 0 0 3px #f00;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px;
+    border: 1px solid #300;
+}
+
+#fearBar {
+    width: 200px;
+    height: 8px;
+    background: #300;
+    margin: 5px 0;
+    overflow: hidden;
+}
+
+#fearFill {
+    height: 100%;
+    background: #f00;
+    width: 0%;
+    transition: width 0.3s;
+    box-shadow: 0 0 10px #f00;
+}
+
+#screens {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: #000;
+    color: #f00;
+}
+
+#startScreen {
+    color: #f00;
+}
+
+#gameOver, #winScreen {
+    display: none;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+#gameOver { color: #f00; }
+#winScreen { color: #0f0; }
+
+.title {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #f00;
+    animation: flicker 3s infinite;
+}
+
+.subtitle {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #a00;
+    max-width: 600px;
+    line-height: 1.4;
+}
+
+.message {
+    font-size: 28px;
+    margin-bottom: 30px;
+    max-width: 600px;
+    line-height: 1.4;
+}
+
+.btn {
+    background: #300;
+    border: 2px solid #f00;
+    color: #f00;
+    padding: 12px 30px;
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 20px;
+    text-shadow: 0 0 5px #f00;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    background: #500;
+    box-shadow: 0 0 20px #f00;
+}
+
+#gameOver {
+    display: none;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+#instructions {
+    color: #a00;
+    font-size: 14px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    text-align: right;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border: 1px solid #300;
+    z-index: 20;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+    51% { opacity: 0.3; }
+    52% { opacity: 0.7; }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.hidden {
+    display: none !important;
+}
+
+#score {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #f00;
+    font-size: 24px;
+    text-shadow: 0 0 5px #f00;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border: 1px solid #300;
+}
+
+#level {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #f00;
+    font-size: 24px;
+    text-shadow: 0 0 5px #f00;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border: 1px solid #300;
+}
+
+#instructions.show {
+    display: block;
+    animation: pulse 2s infinite;
+}
