@@ -3,21 +3,23 @@ html, body {
   background: black;
   overflow: hidden;
   font-family: monospace;
-  color: white;
 }
 
 canvas {
   display: block;
-  image-rendering: pixelated;
+  margin: auto;
   width: 640px;
   height: 400px;
-  margin: auto;
+  image-rendering: pixelated;
 }
 
-#hint {
+#overlay {
   position: fixed;
-  bottom: 10px;
-  width: 100%;
-  text-align: center;
-  opacity: 0.7;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: rgba(0,0,0,0.9);
+  cursor: pointer;
 }
