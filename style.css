@@ -1,151 +1,23 @@
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-
-canvas.width = 320;
-canvas.height = 200;
-ctx.imageSmoothingEnabled = false;
-
-// ===== PLAYER =====
-const player = { x: 160, y: 100, speed: 1 };
-const keys = {};
-
-// ===== AUDIO =====
-let audioCtx;
-let ambientGain;
-let started = false;
-
-function startAudio() {
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  // Ambient drone
-  const osc = audioCtx.createOscillator();
-  osc.type = "sawtooth";
-  osc.frequency.value = 40;
-
-  const noise = audioCtx.createBufferSource();
-  const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
-  noise.buffer = buffer;
-  noise.loop = true;
-
-  ambientGain = audioCtx.createGain();
-  ambientGain.gain.value = 0.02;
-
-  const filter = audioCtx.createBiquadFilter();
-  filter.type = "lowpass";
-  filter.frequency.value = 200;
-
-  osc.connect(filter);
-  noise.connect(filter);
-  filter.connect(ambientGain);
-  ambientGain.connect(audioCtx.destination);
-
-  osc.start();
-  noise.start();
+html, body {
+  margin: 0;
+  background: black;
+  overflow: hidden;
+  font-family: monospace;
+  color: white;
 }
 
-// Footstep sound
-function footstep() {
-  if (!audioCtx) return;
-  const noise = audioCtx.createBufferSource();
-  const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.1, audioCtx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
-  noise.buffer = buffer;
-
-  const gain = audioCtx.createGain();
-  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-
-  noise.connect(gain);
-  gain.connect(audioCtx.destination);
-  noise.start();
+canvas {
+  display: block;
+  image-rendering: pixelated;
+  width: 640px;
+  height: 400px;
+  margin: auto;
 }
 
-// Jumpscare sound
-function jumpscare() {
-  if (!audioCtx) return;
-  const osc = audioCtx.createOscillator();
-  osc.type = "square";
-  osc.frequency.setValueAtTime(80, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
-
-  const gain = audioCtx.createGain();
-  gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.3);
+#hint {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  opacity: 0.7;
 }
-
-// ===== INPUT =====
-document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
-document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
-
-document.body.addEventListener("click", () => {
-  if (!started) {
-    startAudio();
-    document.getElementById("hint").remove();
-    started = true;
-  }
-});
-
-// ===== GAME LOOP =====
-let stepTimer = 0;
-let scareTimer = 300 + Math.random() * 300;
-
-function update() {
-  let moved = false;
-
-  if (keys["w"] || keys["arrowup"]) { player.y -= player.speed; moved = true; }
-  if (keys["s"] || keys["arrowdown"]) { player.y += player.speed; moved = true; }
-  if (keys["a"] || keys["arrowleft"]) { player.x -= player.speed; moved = true; }
-  if (keys["d"] || keys["arrowright"]) { player.x += player.speed; moved = true; }
-
-  if (moved && stepTimer <= 0) {
-    footstep();
-    stepTimer = 20;
-  }
-  stepTimer--;
-
-  scareTimer--;
-  if (scareTimer <= 0) {
-    jumpscare();
-    scareTimer = 300 + Math.random() * 400;
-  }
-}
-
-function draw() {
-  ctx.fillStyle = "rgb(10,10,10)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Fog
-  ctx.fillStyle = "rgba(20,20,20,0.6)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Player
-  ctx.fillStyle = "white";
-  ctx.fillRect(player.x - 2, player.y - 2, 4, 4);
-
-  // VHS lines
-  for (let i = 0; i < canvas.height; i += 4) {
-    ctx.fillStyle = "rgba(255,255,255,0.02)";
-    ctx.fillRect(0, i, canvas.width, 1);
-  }
-
-  // Game title
-  ctx.fillStyle = "rgba(255,255,255,0.6)";
-  ctx.font = "10px monospace";
-  ctx.fillText("Echoes Of Solitude", 6, 14);
-}
-
-function loop() {
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
-
-loop();
