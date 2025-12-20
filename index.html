@@ -3,66 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOID HORROR</title>
+    <title>ASYLUM</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Quick fallback if external CSS doesn't load */
-        body { margin: 0; padding: 0; background: #000; }
-        .hidden { display: none !important; }
-    </style>
 </head>
 <body>
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
         
-        <div id="crt"></div>
-        <div id="vignette"></div>
-        <div id="scanlines"></div>
-        
-        <div id="score">SCORE: 0</div>
-        <div id="level">LEVEL: 1</div>
+        <div id="overlay"></div>
         
         <div id="hud">
-            <div>FEAR: <span id="fearPercent">0</span>%</div>
-            <div id="fearBar">
-                <div id="fearFill"></div>
+            <div class="hud-item">
+                <span class="hud-label">SANITY</span>
+                <div class="bar"><div id="sanityBar"></div></div>
+                <span id="sanityValue">100%</span>
             </div>
-            <div>MONSTERS: <span id="monsterCount">0</span></div>
-            <div>KEYS: <span id="keys">0</span>/3</div>
+            <div class="hud-item">
+                <span class="hud-label">ENTITIES</span>
+                <span id="entityCount" class="hud-value">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">HEART RATE</span>
+                <span id="heartRate" class="hud-value">72 BPM</span>
+            </div>
         </div>
         
-        <div id="instructions">
-            ARROWS/WASD: MOVE<br>
-            SHIFT: SPRINT<br>
-            E: PICK UP KEY<br>
-            FIND 3 KEYS TO ESCAPE
-        </div>
+        <div id="bloodOverlay"></div>
+        <div id="staticOverlay"></div>
+        <div id="breathingEffect"></div>
         
         <div id="screens">
-            <div class="screen" id="startScreen">
-                <div class="title">VOID HORROR</div>
-                <div class="subtitle">
-                    The void consumes all. Find 3 keys to unlock the exit.<br>
-                    Monsters hunt you in the dark. Fear grows in their presence.<br>
-                    Survive as long as you can.
+            <div id="startScreen" class="screen visible">
+                <div class="title">ASYLUM</div>
+                <div class="warning">
+                    WARNING: This experience contains intense psychological horror.<br>
+                    Headphones required. Not for the faint of heart.
                 </div>
-                <button class="btn" id="startBtn">ENTER THE VOID</button>
-                <div class="subtitle" style="font-size: 12px; margin-top: 30px; color: #500;">
-                    🔊 Use headphones for immersive experience
+                <div class="instructions">
+                    You wake in the abandoned asylum. The walls whisper.<br>
+                    Find 5 patient files before your sanity breaks.<br>
+                    The entities are always watching. Always listening.
+                </div>
+                <button id="startBtn" class="btn">BEGIN DESCENT</button>
+                <div class="disclaimer">
+                    All audio is procedurally generated. No external files.
                 </div>
             </div>
             
-            <div class="screen" id="gameOver">
-                <div class="title">CONSUMED</div>
-                <div class="subtitle" id="deathMessage">The void has taken you.</div>
-                <div class="subtitle" style="font-size: 24px; margin: 20px 0;">
-                    SCORE: <span id="finalScore">0</span>
+            <div id="deathScreen" class="screen">
+                <div class="title">SANITY BROKEN</div>
+                <div class="deathMessage" id="deathMessage">The whispers became screams.</div>
+                <div class="stats">
+                    <div>SURVIVAL TIME: <span id="survivalTime">0:00</span></div>
+                    <div>ENTITIES ENCOUNTERED: <span id="entitiesEncountered">0</span></div>
+                    <div>FILES COLLECTED: <span id="filesCollected">0</span>/5</div>
                 </div>
-                <button class="btn" id="restartBtn">TRY AGAIN</button>
+                <button id="restartBtn" class="btn">TRY AGAIN</button>
+            </div>
+            
+            <div id="winScreen" class="screen">
+                <div class="title">ESCAPED</div>
+                <div class="message">You escaped the asylum... for now.</div>
+                <div class="stats">
+                    <div>SANITY REMAINING: <span id="finalSanity">0%</span></div>
+                    <div>FILES FOUND: <span id="finalFiles">5</span>/5</div>
+                </div>
+                <button id="continueBtn" class="btn">CONTINUE</button>
             </div>
         </div>
+        
+        <div id="controls">
+            <div>WASD - MOVE</div>
+            <div>SHIFT - RUN</div>
+            <div>E - INTERACT</div>
+            <div>F - FLASHLIGHT</div>
+        </div>
+        
+        <div id="audioWarning">🔊 CLICK TO ENABLE AUDIO</div>
     </div>
-
+    
     <script src="script.js"></script>
 </body>
 </html>
