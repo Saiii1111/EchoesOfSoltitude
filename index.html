@@ -3,85 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASYLUM</title>
+    <title>Echoes of Solitude</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
-        
-        <div id="overlay"></div>
-        
-        <div id="hud">
-            <div class="hud-item">
-                <span class="hud-label">SANITY</span>
-                <div class="bar"><div id="sanityBar"></div></div>
-                <span id="sanityValue">100%</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">ENTITIES</span>
-                <span id="entityCount" class="hud-value">0</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">HEART RATE</span>
-                <span id="heartRate" class="hud-value">72 BPM</span>
-            </div>
-        </div>
-        
-        <div id="bloodOverlay"></div>
-        <div id="staticOverlay"></div>
-        <div id="breathingEffect"></div>
-        
-        <div id="screens">
-            <div id="startScreen" class="screen visible">
-                <div class="title">ASYLUM</div>
-                <div class="warning">
-                    WARNING: This experience contains intense psychological horror.<br>
-                    Headphones required. Not for the faint of heart.
-                </div>
-                <div class="instructions">
-                    You wake in the abandoned asylum. The walls whisper.<br>
-                    Find 5 patient files before your sanity breaks.<br>
-                    The entities are always watching. Always listening.
-                </div>
-                <button id="startBtn" class="btn">BEGIN DESCENT</button>
-                <div class="disclaimer">
-                    All audio is procedurally generated. No external files.
-                </div>
-            </div>
-            
-            <div id="deathScreen" class="screen">
-                <div class="title">SANITY BROKEN</div>
-                <div class="deathMessage" id="deathMessage">The whispers became screams.</div>
-                <div class="stats">
-                    <div>SURVIVAL TIME: <span id="survivalTime">0:00</span></div>
-                    <div>ENTITIES ENCOUNTERED: <span id="entitiesEncountered">0</span></div>
-                    <div>FILES COLLECTED: <span id="filesCollected">0</span>/5</div>
-                </div>
-                <button id="restartBtn" class="btn">TRY AGAIN</button>
-            </div>
-            
-            <div id="winScreen" class="screen">
-                <div class="title">ESCAPED</div>
-                <div class="message">You escaped the asylum... for now.</div>
-                <div class="stats">
-                    <div>SANITY REMAINING: <span id="finalSanity">0%</span></div>
-                    <div>FILES FOUND: <span id="finalFiles">5</span>/5</div>
-                </div>
-                <button id="continueBtn" class="btn">CONTINUE</button>
-            </div>
-        </div>
-        
-        <div id="controls">
-            <div>WASD - MOVE</div>
-            <div>SHIFT - RUN</div>
-            <div>E - INTERACT</div>
-            <div>F - FLASHLIGHT</div>
-        </div>
-        
-        <div id="audioWarning">🔊 CLICK TO ENABLE AUDIO</div>
-    </div>
-    
+    <canvas id="gameCanvas"></canvas>
     <script src="script.js"></script>
 </body>
 </html>
